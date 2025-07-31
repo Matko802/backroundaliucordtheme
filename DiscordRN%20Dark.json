@@ -1,0 +1,35 @@
+{
+    "manifest": {
+        "name": "Discord Midnight theme",
+        "author": "Matko802"
+    },
+    "background": {
+        "url": "https:\/\/raw.githubusercontent.com\/Matko802\/backroundaliucordtheme\/main\/blackbg.png"
+    },
+    "fonts": {
+        "ginto_bold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Bold.ttf",
+        "ginto_medium": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf",
+        "ginto_regular": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Regular.ttf",
+        "whitney_bold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Bold.ttf",
+        "whitney_medium": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf",
+        "whitney_semibold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Regular.ttf",
+        "roboto_medium_numbers": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf"
+    },
+    "simple_colors": {
+        "background": -15790060,
+        "input_background": -14803420,
+        "background_secondary": -15527144,
+        "statusbar": -16777216
+    },
+    "colors": {
+        "primary_dark_700": -16777216,
+        "primary_dark_800": -15197921,
+        "brand_new": -10983950,
+        "white_800": -14934750,
+        "uikit_btn_bg_color_selector_red": -2474428,
+        "primary_630": -15592936,
+        "primary_660": -13027007
+    },
+    "drawable_tints": {},
+    "raws": {}
+}
