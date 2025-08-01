@@ -2,7 +2,7 @@
     "manifest": {
         "name": "Discord Midnight theme",
         "author": "Matko802",
-        "updater": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/refs/heads/main/Discord%20Midnight%20theme.json"
+        "updater": "https:\/\/raw.githubusercontent.com\/Matko802\/backroundaliucordtheme\/refs\/heads\/main\/DiscordRN%2520Dark.json"
     },
     "background": {
         "url": "https:\/\/raw.githubusercontent.com\/Matko802\/backroundaliucordtheme\/main\/blackbg.png"
@@ -19,7 +19,7 @@
     "simple_colors": {
         "background": -15790060,
         "input_background": -14803420,
-        "background_secondary": -15527144,
+        "background_secondary": -14803420,
         "statusbar": -16777216
     },
     "colors": {
