@@ -1,36 +1,41 @@
 {
     "manifest": {
-        "name": "Discord Midnight theme",
+        "name": "Discord Midnight Theme",
         "author": "Matko802",
-        "updater": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/refs/heads/main/blackkbg.png"
+        "updater": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/main/blackbg.png"
     },
     "background": {
-        "url": "https:\/\/raw.githubusercontent.com\/Matko802\/backroundaliucordtheme\/main\/blackbg.png"
+        "url": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/main/blackbg.png"
     },
     "fonts": {
-        "ginto_bold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Bold.ttf",
-        "ginto_medium": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf",
-        "ginto_regular": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Regular.ttf",
-        "whitney_bold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Bold.ttf",
-        "whitney_medium": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf",
-        "whitney_semibold": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Regular.ttf",
-        "roboto_medium_numbers": "https:\/\/github.com\/SeaCreeature\/-gg-sans-for-Aliucord\/raw\/refs\/heads\/main\/gg%20sans%20Medium.ttf"
+        "gg_sans_normal": "https://github.com/SeaCreeature/-gg-sans-for-Aliucord/raw/refs/heads/main/gg%20sans%20Regular.ttf",
+        "gg_sans_medium": "https://github.com/SeaCreeature/-gg-sans-for-Aliucord/raw/refs/heads/main/gg%20sans%20Medium.ttf",
+        "gg_sans_bold": "https://github.com/SeaCreeature/-gg-sans-for-Aliucord/raw/refs/heads/main/gg%20sans%20Bold.ttf"
     },
     "simple_colors": {
-        "background": -15790060,
-        "input_background": -14803420,
-        "background_secondary": -14803420,
-        "statusbar": -16777216
+        "background": -15066598,
+        "background_secondary": -15395563,
+        "input_background": -14869219,
+        "statusbar": -16777216,
+        "accent": -10983950
     },
     "colors": {
-        "primary_dark_700": -16777216,
-        "primary_dark_800": -15197921,
-        "brand_new": -10983950,
-        "white_800": -14934750,
-        "uikit_btn_bg_color_selector_red": -2474428,
+        "brand_500": -10983950,
+        "brand_560": -11645361,
+        "primary_600": -14606047,
         "primary_630": -15592936,
-        "primary_660": -13027007
+        "primary_660": -13027007,
+        "primary_dark_700": -15724528,
+        "primary_dark_800": -16119286,
+        "text_normal": -1,
+        "text_muted": -7368817,
+        "uikit_btn_bg_color_selector_red": -2474428
     },
-    "drawable_tints": {},
+    "drawable_tints": {
+        "ic_home": -1,
+        "ic_settings": -1,
+        "ic_user": -1
+    },
     "raws": {}
 }
+
