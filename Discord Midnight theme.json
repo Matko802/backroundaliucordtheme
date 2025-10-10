@@ -2,7 +2,7 @@
     "manifest": {
         "name": "Discord Midnight theme",
         "author": "Matko802",
-        "updater": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/refs/heads/main/blackbg.png"
+        "updater": "https://raw.githubusercontent.com/Matko802/backroundaliucordtheme/refs/heads/main/blackkbg.png"
     },
     "background": {
         "url": "https:\/\/raw.githubusercontent.com\/Matko802\/backroundaliucordtheme\/main\/blackbg.png"
