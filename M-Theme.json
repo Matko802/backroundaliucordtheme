@@ -11,7 +11,7 @@
   "semanticColors": {
     "ANDROID_NAVIGATION_BAR_BACKGROUND": ["#ffffff"],
     "ANDROID_RIPPLE": ["#5e505c"],
-    "CHAT_BACKGROUND": ["#282828"],
+    "CHAT_BACKGROUND": ["#000000"],
     "BACKGROUND_ACCENT": ["#d3869b"],
     "BACKGROUND_FLOATING": ["#3c3836"],
     "BACKGROUND_MENTIONED": ["#d3869b33"],
