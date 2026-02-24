@@ -70,15 +70,21 @@
       "#0f0f12"
     ],
     "REDESIGN_CHAT_INPUT_BACKGROUND": [
-      "#0e0e10"
+      "#121214"
     ],
     "CHANNELTEXTAREA_BACKGROUND": [
       "#121214"
+    ],
+    "CHAT_INPUT_CONTAINER_BACKGROUND": [
+      "#0f0f10"
     ],
     "AUTOCOMPLETE_BG": [
       "#0e0e10"
     ],
     "SPOILER_HIDDEN_BACKGROUND": [
+      "#1a1a1e"
+    ],
+    "SPOILER_REVEALED_BACKGROUND": [
       "#1a1a1e"
     ],
     "BACKGROUND_ACCENT": [
@@ -174,6 +180,9 @@
     "REDESIGN_BUTTON_SECONDARY_ALT_BACKGROUND": [
       "#0f0f12"
     ],
+    "REDESIGN_BUTTON_TERTIARY_BACKGROUND": [
+      "#0c0c0e"
+    ],
     "REDESIGN_BUTTON_DANGER_BACKGROUND": [
       "#ed4245"
     ],
@@ -184,7 +193,34 @@
       "#ed4245"
     ],
     "STATUS_DANGER_TEXT": [
-      "#ffffff"
+      "#FFFFFF"
+    ],
+    "STATUS_DND": [
+      "#ed4245"
+    ],
+    "STATUS_IDLE": [
+      "#faa61a"
+    ],
+    "STATUS_ONLINE": [
+      "#3ba55c"
+    ],
+    "STATUS_OFFLINE": [
+      "#72767d"
+    ],
+    "STATUS_POSITIVE": [
+      "#3ba55c"
+    ],
+    "STATUS_POSITIVE_BACKGROUND": [
+      "#3ba55c"
+    ],
+    "STATUS_POSITIVE_TEXT": [
+      "#FFFFFF"
+    ],
+    "MENTION_BADGE": [
+      "#ed4245"
+    ],
+    "REDESIGN_MENTION_BADGE": [
+      "#ed4245"
     ],
     "KEYBOARD": [
       "#0f0f10"
@@ -202,21 +238,17 @@
     "RED_500": "#ed4245",
     "BLACK_500": "#0c0c0e",
     "PRIMARY_100": "#e9d9ff",
+    "PRIMARY_560": "#0f0f10",
     "PRIMARY_600": "#0f0f10",
+    "PRIMARY_630": "#0f0f10",
+    "PRIMARY_660": "#0f0f10",
     "PRIMARY_700": "#0f0f10",
     "PRIMARY_800": "#0c0c0e",
     "WHITE_500": "#ffffff"
   },
   "plus": {
     "version": "1",
-    "iconPack": "rosiecord-plumpy",
-    "mentionLineColor": "#b592e6",
-    "customOverlays": true,
-    "icons": {
-      "trash": "#8200c8",
-      "TrashIcon": "#8200c8",
-      "TriangleExclamationPointIcon": "#8200c8"
-    }
+    "mentionLineColor": "#b592e6"
   },
   "spec": 2
 }
