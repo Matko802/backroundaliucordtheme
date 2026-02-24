@@ -144,6 +144,21 @@ input{font:inherit;color:inherit;background:none;border:none;outline:none}
 .exportTextarea{width:100%;min-height:100px;background:var(--bgSecondary);color:#d5d6db;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;font:11px/1.4 monospace;resize:vertical}
 .exportHint{font-size:10px;color:var(--muted);margin-top:6px}
 .exportHint b{color:var(--text)}
+.collapsible{cursor:pointer;display:flex;align-items:center;gap:4px;user-select:none}
+.collapsible::before{content:'▸';font-size:10px;transition:transform .2s}
+.collapsible.open::before{transform:rotate(90deg)}
+.advPanel{display:none;margin-top:6px}
+.advPanel.show{display:block}
+.advRow{display:flex;gap:4px;align-items:center;margin-bottom:4px}
+.advRow input[type="text"]{flex:1;padding:5px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:var(--bgAlt);color:var(--text);font-size:11px;font-family:monospace}
+.advRow .advDel{width:24px;height:24px;border-radius:6px;background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0}
+.advAdd{display:flex;gap:4px;margin-top:4px}
+.advAdd input{flex:1;padding:5px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:var(--bgAlt);color:var(--text);font-size:11px;font-family:monospace}
+.advAdd button{padding:5px 10px;border-radius:6px;background:var(--brand);color:#fff;font-size:11px;font-weight:700}
+.toggleSwitch{position:relative;width:40px;height:22px;background:var(--bgAlt);border-radius:11px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggleSwitch.on{background:var(--brand)}
+.toggleSwitch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggleSwitch.on::after{transform:translateX(18px)}
 
 .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--bgFloating);color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:opacity .2s;pointer-events:none;z-index:100;font-size:13px;font-weight:600;white-space:nowrap}
 .toast.show{opacity:1}
@@ -153,7 +168,7 @@ input{font:inherit;color:inherit;background:none;border:none;outline:none}
 
 <div class="app" id="app">
   <div class="topToggle">
-    <h1>Theme Studio</h1>
+    <h1>Mobile Theme Studio</h1>
     <button class="toggleBtn" id="modeBtn" onclick="toggleMode()">Edit Colors</button>
   </div>
   <div class="mainArea" id="mainArea"></div>
@@ -180,6 +195,8 @@ const COLOR_META={
 let colors={...PRESETS.purple};
 let mode="preview";
 let activeTab="home";
+let themeMeta={name:"Theme Name",description:"Theme Description",version:"3",authorName:"Matko802",authorId:"1052216205542428698",spec:2};
+let themeExtra={semanticColors:{},rawColors:{},background:null,plus:{version:"0",iconPack:"",customOverlays:false,icons:{}},other:{}};
 
 function applyColors(){
   const r=document.documentElement.style;
@@ -194,33 +211,16 @@ function showToast(msg){
 }
 
 const DMS=[
-  {name:"Matko802",badge:"",status:"online",msg:"Matko802: hey there!",time:"1h",star:true}
+  {name:"Matko802",badge:"",status:"online",msg:"Vibecoded but atleast it works",time:"1h",star:true}
 ];
 
 const SERVERS=[
   {letter:"💬",type:"dm",bg:"var(--brand)"},
-  {letter:"M",bg:"#2f3136"},
-  {letter:"🌐",bg:"#2f3136"},
-  {letter:"",label:"NOTHING (R)"},
-  {letter:"J",bg:"#c0392b"},
-  {letter:"H",bg:"#2980b9"},
-  {letter:"🦊",bg:"#e67e22"},
-  {letter:"👤",bg:"#7f8c8d"},
-  {letter:"🏛",bg:"#2c3e50"},
-  {letter:"⬡",bg:"#1abc9c"},
-  {letter:"ls",bg:"#8e44ad"},
-  {letter:"📁",bg:"#3498db"},
-  {letter:"🔺",bg:"#ecf0f1"},
-  {letter:"A",bg:"#27ae60"},
+  {img: "https://raw.githubusercontent.com/C0C0B01/Kettu/github/src/assets/icons/kettu.png", bg:"#000000"},
 ];
 
 const NOTIFICATIONS=[
-  {user:"Reyyan",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"thats actually trash",time:"16h",emoji:"💕"},
-  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"lmfao, you're asking",time:"16h",emoji:"❓"},
-  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"I will do it to every brand 😭",time:"16h",emoji:"❓"},
-  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"give it some time 🤗",time:"16h",emoji:"❓"},
-  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"just like in pixel",time:"16h",emoji:"❓"},
-  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"cameras are INDENTICAL",time:"16h",emoji:"❓"},
+  {user:"Discord",text:"</b>",quote:"give us your id :)",time:"16h",emoji:"❓"}
 ];
 
 function switchTab(tab){
@@ -281,7 +281,8 @@ function renderHome(){
     <div class="rail">
       ${SERVERS.map((s,i)=>{
         if(s.label) return '<div class="railLabel">'+s.label+'</div>';
-        return '<div class="srv '+(i===0?'active dm':'')+'" style="background:'+s.bg+'">'+s.letter+'</div>'+(i===0?'<div class="railSep"></div>':'');
+        const content = s.img ? `<img src="${s.img}" alt="Kettu Logo">` : s.letter;
+        return '<div class="srv '+(i===0?'active':'')+'" style="background:'+(s.bg||'transparent')+'">'+content+'</div>'+(i===0?'<div class="railSep"></div>':'');
       }).join('')}
     </div>
     <div class="content">
@@ -371,47 +372,161 @@ function renderProfile(){
     <div class="profileEditBtn">✏️ Edit Profile</div>
     <div class="profileCard">
       <div class="profileCardTitle">Orbs Balance</div>
-      <div class="profileCardValue">💠 8630</div>
+      <div class="profileCardValue">💠 0</div>
     </div>
     <div class="profileCard">
       <div class="profileCardTitle">About Me</div>
-      <div class="profileAbout">My 12:00 = is your 12:00
-I use arch btw :archbtw:
-Indie games are best!!!
-
--Shy
--Likes playing on vr
--Slovak 🇸🇰</div>
+      <div class="profileAbout">Placeholder text</div>
       <div class="profileMemberSince">Member Since<br><span>🎮 13 Dec 2022</span></div>
     </div>
     <div class="profileCard">
       <div class="profileCardTitle">Connections</div>
-      <div class="profileCardValue">🌐 matko.falivhub.dev</div>
+      <div class="profileCardValue"><a href="https://matko.felixhub.dev/" target="_blank" style="color:inherit;text-decoration:none;">🌐 matko.felixhub.dev</a></div>
     </div>
   </div>`;
 }
 
 function renderControls(){
   const keys=Object.keys(COLOR_META);
+  const scKeys=Object.keys(themeExtra.semanticColors);
+  const rcKeys=Object.keys(themeExtra.rawColors);
+  const plusIcons=themeExtra.plus.icons||{};
+  const piKeys=Object.keys(plusIcons);
   return `
   <div class="controls">
     <h1>Theme Studio — Mobile</h1>
-    <div class="sub">Edit colors and export your theme JSON for Themes+</div>
+    <div class="sub">Edit colors and export your theme JSON (Vendetta/Bunny format)</div>
     <div class="toolbar">
       <button class="presetBtn primary" onclick="loadPreset('purple')">Purple Vision</button>
       <button class="presetBtn sec" onclick="loadPreset('cobalt')">Cobalt</button>
       <button class="presetBtn ghost" onclick="loadPreset('default')">Default</button>
     </div>
+
+    <div class="section">
+      <h2>Theme Info</h2>
+      <div class="field">
+        <div class="fLabel"><span>Name</span><small>Theme name</small></div>
+        <input type="text" value="${themeMeta.name}" style="width:140px" onchange="themeMeta.name=this.value"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Description</span><small>Short description</small></div>
+        <input type="text" value="${themeMeta.description}" style="width:140px" onchange="themeMeta.description=this.value"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Author</span><small>Your name</small></div>
+        <input type="text" value="${themeMeta.authorName}" style="width:100px" onchange="themeMeta.authorName=this.value"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Author ID</span><small>Discord user ID</small></div>
+        <input type="text" value="${themeMeta.authorId}" style="width:140px" onchange="themeMeta.authorId=this.value"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Version</span><small>Theme version</small></div>
+        <input type="text" value="${themeMeta.version}" style="width:60px" onchange="themeMeta.version=this.value"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Spec</span><small>Format spec (2)</small></div>
+        <input type="text" value="${themeMeta.spec}" style="width:60px" onchange="themeMeta.spec=parseInt(this.value)||2"/>
+      </div>
+    </div>
+
     <div class="section">
       <h2>Colors</h2>
       ${keys.map(k=>`
         <div class="field">
           <div class="fLabel"><span>${COLOR_META[k].l}</span><small>${COLOR_META[k].h}</small></div>
-          <input type="color" value="${colors[k]}" data-key="${k}" onchange="updateColor(this)"/>
+          <input type="color" value="${colors[k].substring(0,7)}" data-key="${k}" onchange="updateColor(this)"/>
           <input type="text" value="${colors[k]}" data-key="${k}" onchange="updateColorText(this)"/>
         </div>
       `).join('')}
     </div>
+
+    <div class="section">
+      <h2>Background Image</h2>
+      <div class="field">
+        <div class="fLabel"><span>BG URL</span><small>Background image URL</small></div>
+        <input type="text" value="${themeExtra.background&&themeExtra.background.url?themeExtra.background.url:''}" style="width:180px" onchange="setBgUrl(this.value)" placeholder="https://..."/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Blur</span><small>Blur radius</small></div>
+        <input type="text" value="${themeExtra.background&&themeExtra.background.blur!=null?themeExtra.background.blur:''}" style="width:60px" onchange="setBgBlur(this.value)" placeholder="0"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Alpha</span><small>Overlay opacity 0-1</small></div>
+        <input type="text" value="${themeExtra.background&&themeExtra.background.alpha!=null?themeExtra.background.alpha:''}" style="width:60px" onchange="setBgAlpha(this.value)" placeholder="0.7"/>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Plus Section</h2>
+      <div class="field">
+        <div class="fLabel"><span>Icon Pack</span><small>e.g. rosiecord-plumpy</small></div>
+        <input type="text" value="${themeExtra.plus.iconPack||''}" style="width:140px" onchange="themeExtra.plus.iconPack=this.value||undefined"/>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Custom Overlays</span><small>Enable custom overlays</small></div>
+        <div class="toggleSwitch ${themeExtra.plus.customOverlays?'on':''}" onclick="togglePlusOverlays(this)"></div>
+      </div>
+      <div class="field">
+        <div class="fLabel"><span>Plus Version</span><small>Plus section version</small></div>
+        <input type="text" value="${themeExtra.plus.version||'0'}" style="width:60px" onchange="themeExtra.plus.version=this.value"/>
+      </div>
+      <h2 class="collapsible" onclick="toggleAdv(this)" style="margin-top:8px">Plus Icons (${piKeys.length})</h2>
+      <div class="advPanel">
+        ${piKeys.map(k=>`
+          <div class="advRow">
+            <input type="text" value="${k}" disabled style="flex:1.2"/>
+            <input type="color" value="${(plusIcons[k]||'#ffffff').substring(0,7)}" onchange="themeExtra.plus.icons['${k}']=this.value;this.nextElementSibling.value=this.value"/>
+            <input type="text" value="${plusIcons[k]||''}" style="width:72px" onchange="themeExtra.plus.icons['${k}']=this.value"/>
+            <div class="advDel" onclick="delete themeExtra.plus.icons['${k}'];render()">×</div>
+          </div>
+        `).join('')}
+        <div class="advAdd">
+          <input type="text" id="piKeyIn" placeholder="Icon name"/>
+          <input type="text" id="piValIn" placeholder="#ff0000"/>
+          <button onclick="addPlusIcon()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="collapsible" onclick="toggleAdv(this)">Semantic Color Overrides (${scKeys.length})</h2>
+      <div class="advPanel">
+        <div class="exportHint" style="margin-bottom:6px">Override any semanticColor key. Values are arrays — enter the dark mode hex.</div>
+        ${scKeys.map(k=>`
+          <div class="advRow">
+            <input type="text" value="${k}" disabled style="flex:1.5"/>
+            <input type="text" value="${Array.isArray(themeExtra.semanticColors[k])?themeExtra.semanticColors[k][0]:themeExtra.semanticColors[k]}" style="width:80px" onchange="themeExtra.semanticColors['${k}']=[this.value]"/>
+            <div class="advDel" onclick="delete themeExtra.semanticColors['${k}'];render()">×</div>
+          </div>
+        `).join('')}
+        <div class="advAdd">
+          <input type="text" id="scKeyIn" placeholder="SEMANTIC_KEY"/>
+          <input type="text" id="scValIn" placeholder="#hexvalue"/>
+          <button onclick="addScOverride()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="collapsible" onclick="toggleAdv(this)">Raw Color Overrides (${rcKeys.length})</h2>
+      <div class="advPanel">
+        <div class="exportHint" style="margin-bottom:6px">Override any rawColor key directly.</div>
+        ${rcKeys.map(k=>`
+          <div class="advRow">
+            <input type="text" value="${k}" disabled style="flex:1.5"/>
+            <input type="text" value="${themeExtra.rawColors[k]}" style="width:80px" onchange="themeExtra.rawColors['${k}']=this.value"/>
+            <div class="advDel" onclick="delete themeExtra.rawColors['${k}'];render()">×</div>
+          </div>
+        `).join('')}
+        <div class="advAdd">
+          <input type="text" id="rcKeyIn" placeholder="RAW_KEY"/>
+          <input type="text" id="rcValIn" placeholder="#hexvalue"/>
+          <button onclick="addRcOverride()">Add</button>
+        </div>
+      </div>
+    </div>
+
     <div class="section exportSection">
       <h2>Import / Export</h2>
       <div class="exportBtns">
@@ -421,12 +536,54 @@ function renderControls(){
       </div>
       <textarea class="exportTextarea" id="jsonArea" placeholder="Paste theme JSON here to import…"></textarea>
       <button class="presetBtn sec" onclick="importJSON()" style="margin-top:6px">Import</button>
-      <div class="exportHint">Host on GitHub and use the <b>raw.githubusercontent.com</b> link in Themes+.</div>
+      <div class="exportHint">Export uses <b>Vendetta/Bunny</b> JSON format with semanticColors + rawColors.</div>
     </div>
   </div>`;
 }
 
 function bindControls(){}
+
+function toggleAdv(el){
+  el.classList.toggle('open');
+  const panel=el.nextElementSibling;
+  if(panel)panel.classList.toggle('show');
+}
+function togglePlusOverlays(el){
+  themeExtra.plus.customOverlays=!themeExtra.plus.customOverlays;
+  el.classList.toggle('on');
+}
+function setBgUrl(v){
+  if(!v){themeExtra.background=null;return;}
+  if(!themeExtra.background)themeExtra.background={};
+  themeExtra.background.url=v;
+}
+function setBgBlur(v){
+  if(!themeExtra.background)themeExtra.background={};
+  themeExtra.background.blur=v?parseFloat(v):undefined;
+}
+function setBgAlpha(v){
+  if(!themeExtra.background)themeExtra.background={};
+  themeExtra.background.alpha=v?parseFloat(v):undefined;
+}
+function addScOverride(){
+  const k=document.getElementById('scKeyIn')?.value?.trim();
+  const v=document.getElementById('scValIn')?.value?.trim();
+  if(!k||!v)return showToast('Enter key and value');
+  themeExtra.semanticColors[k]=[v];render();showToast('Added '+k);
+}
+function addRcOverride(){
+  const k=document.getElementById('rcKeyIn')?.value?.trim();
+  const v=document.getElementById('rcValIn')?.value?.trim();
+  if(!k||!v)return showToast('Enter key and value');
+  themeExtra.rawColors[k]=v;render();showToast('Added '+k);
+}
+function addPlusIcon(){
+  const k=document.getElementById('piKeyIn')?.value?.trim();
+  const v=document.getElementById('piValIn')?.value?.trim();
+  if(!k||!v)return showToast('Enter icon name and color');
+  if(!themeExtra.plus.icons)themeExtra.plus.icons={};
+  themeExtra.plus.icons[k]=v;render();showToast('Added '+k);
+}
 
 function updateColor(el){
   const k=el.dataset.key;colors[k]=el.value;
@@ -444,54 +601,556 @@ function updateColorText(el){
 function loadPreset(name){colors={...PRESETS[name]};render();showToast(name.charAt(0).toUpperCase()+name.slice(1)+' preset loaded')}
 
 function themeToJSON(){
-  return JSON.stringify({name:"Theme Studio Export",version:"1.0.0",colors:{
-    BRAND:colors.brand,BRAND_HOVER:colors.brandHover,LINK:colors.link,
-    TEXT_NORMAL:colors.text,TEXT_MUTED:colors.muted,HEADER_PRIMARY:colors.textPrimary,HEADER_SECONDARY:colors.textSecond,
-    BACKGROUND_PRIMARY:colors.bgPrimary,BACKGROUND_SECONDARY:colors.bgSecondary,BACKGROUND_SECONDARY_ALT:colors.bgAlt,
-    BACKGROUND_TERTIARY:colors.bgTertiary,BACKGROUND_FLOATING:colors.bgFloating,BACKGROUND_NESTED_FLOATING:colors.bgNested,
-    CARD_PRIMARY_BG:colors.cardPrimary,CARD_SECONDARY_BG:colors.cardSecondary,INPUT_BACKGROUND:colors.input,
-    STATUS_GREEN:colors.success,STATUS_YELLOW:colors.warning,STATUS_RED:colors.danger,
-    RIPPLE_COLOR:colors.ripple,SCROLLBAR_THIN_THUMB:colors.scrollbar,MENTION_HIGHLIGHT:colors.mentionLine,
-    INTERACTIVE_NORMAL:colors.icon,INTERACTIVE_MUTED:colors.iconMuted
-  }},null,2);
+  const w=v=>[v];
+  const brand=colors.brand;
+  const builtSC={
+    ANDROID_NAVIGATION_BAR_BACKGROUND:w(colors.bgTertiary),
+    ANDROID_NAVIGATION_SCRIM_BACKGROUND:w(colors.bgTertiary+"80"),
+    ANDROID_RIPPLE:w(colors.ripple),
+    APP_MESSAGE_EMBED_SECONDARY_TEXT:w(colors.text+"b3"),
+    BACKGROUND_ACCENT:w(brand),
+    BACKGROUND_BASE_LOW:w(colors.bgSecondary),
+    BACKGROUND_BASE_LOWER:w(colors.bgPrimary),
+    BACKGROUND_BASE_LOWEST:w(colors.bgTertiary),
+    BACKGROUND_BRAND:w(brand),
+    BACKGROUND_FEEDBACK_CRITICAL:w(colors.danger),
+    BACKGROUND_FEEDBACK_INFO:w(brand+"14"),
+    BACKGROUND_FEEDBACK_NOTIFICATION:w(colors.danger),
+    BACKGROUND_FEEDBACK_POSITIVE:w(colors.success+"14"),
+    BACKGROUND_FEEDBACK_WARNING:w(colors.warning+"1a"),
+    BACKGROUND_FLOATING:w(colors.bgFloating),
+    BACKGROUND_MENTIONED:w(brand+"33"),
+    BACKGROUND_MENTIONED_HOVER:w(brand+"4d"),
+    BACKGROUND_MESSAGE_HOVER:w(colors.bgTertiary+"0f"),
+    BACKGROUND_MOBILE_PRIMARY:w(colors.bgPrimary),
+    BACKGROUND_MOBILE_SECONDARY:w(colors.bgSecondary),
+    BACKGROUND_MOD_MUTED:w(colors.muted+"4d"),
+    BACKGROUND_MOD_NORMAL:w(colors.muted+"29"),
+    BACKGROUND_MOD_STRONG:w(colors.muted+"8a"),
+    BACKGROUND_MOD_SUBTLE:w(colors.muted+"7a"),
+    BACKGROUND_MODIFIER_ACCENT:w(brand+"26"),
+    BACKGROUND_MODIFIER_ACTIVE:w(brand+"33"),
+    BACKGROUND_MODIFIER_HOVER:w(brand+"1a"),
+    BACKGROUND_MODIFIER_SELECTED:w(brand+"99"),
+    BACKGROUND_MODIFIER_ACCEPT:w(colors.success+"33"),
+    BACKGROUND_MODIFIER_ACCEPT_HOVER:w(colors.success+"4d"),
+    BACKGROUND_NESTED_FLOATING:w(colors.bgNested),
+    BACKGROUND_PRIMARY:w(colors.bgPrimary),
+    BACKGROUND_SCRIM:w("#000000b3"),
+    BACKGROUND_SCRIM_LIGHTBOX:w("#000000eb"),
+    BACKGROUND_SECONDARY:w(colors.bgSecondary),
+    BACKGROUND_SECONDARY_ALT:w(colors.bgAlt),
+    BACKGROUND_SURFACE_HIGH:w(colors.bgTertiary),
+    BACKGROUND_SURFACE_HIGHEST:w(colors.bgTertiary),
+    BACKGROUND_TERTIARY:w(colors.bgTertiary),
+    BADGE_BACKGROUND_BRAND:w(brand),
+    BADGE_BACKGROUND_DEFAULT:w(colors.muted+"29"),
+    BADGE_NOTIFICATION_BACKGROUND:w(colors.danger),
+    BADGE_TEXT_DEFAULT:w(colors.textPrimary),
+    BG_BACKDROP:w(colors.bgPrimary+"cc"),
+    BG_BASE_PRIMARY:w(colors.bgPrimary),
+    BG_BASE_SECONDARY:w(colors.bgSecondary),
+    BG_BASE_TERTIARY:w(colors.bgTertiary),
+    BG_MOD_FAINT:w(colors.textPrimary+"1a"),
+    BG_MOD_SUBTLE:w(colors.textPrimary+"0a"),
+    BG_SURFACE_OVERLAY:w(colors.bgFloating),
+    BG_SURFACE_OVERLAY_TMP:w(colors.bgPrimary),
+    BG_SURFACE_RAISED:w(colors.bgSecondary),
+    BLACK:w("#000000"),
+    BLUR_FALLBACK:w(colors.bgPrimary+"f5"),
+    BLUR_FALLBACK_PRESSED:w(colors.bgTertiary+"f5"),
+    BORDER_FEEDBACK_CRITICAL:w(colors.danger+"33"),
+    BORDER_FOCUS:w(brand),
+    BORDER_FAINT:w(colors.textPrimary+"10"),
+    BORDER_MUTED:w("#ffffff08"),
+    BORDER_STRONG:w(brand+"55"),
+    BORDER_SUBTLE:w(colors.textPrimary+"22"),
+    BUG_REPORTER_MODAL_SUBMITTING_BACKGROUND:w(colors.bgFloating),
+    BUTTON_DANGER_BACKGROUND_DISABLED:w(colors.danger),
+    BUTTON_OUTLINE_BRAND_BACKGROUND_HOVER:w(brand),
+    BUTTON_OUTLINE_BRAND_BORDER_ACTIVE:w(colors.brandHover),
+    BUTTON_OUTLINE_PRIMARY_TEXT:w("#ffffff"),
+    CARD_BACKGROUND_DEFAULT:w(colors.bgSecondary),
+    CARD_GRADIENT_BG:w("#00000066"),
+    CARD_GRADIENT_PRESSED_BG:w("#00000080"),
+    CARD_PRIMARY_BG:w(colors.cardPrimary),
+    CARD_PRIMARY_PRESSED_BG:w(colors.bgPrimary),
+    CARD_SECONDARY_BG:w(colors.cardSecondary),
+    CARD_SECONDARY_PRESSED_BG:w(colors.bgPrimary),
+    CHANNEL_ICON:w(colors.icon),
+    CHANNELS_DEFAULT:w(colors.textSecond),
+    CHANNEL_TEXT_AREA_PLACEHOLDER:w(colors.muted),
+    CHANNELTEXTAREA_BACKGROUND:w(colors.input),
+    CHAT_BACKGROUND:w("transparent"),
+    CHAT_BANNER_BG:w(colors.bgPrimary),
+    CHAT_BORDER:w(colors.bgPrimary),
+    CHAT_INPUT_CONTAINER_BACKGROUND:w(colors.bgPrimary),
+    CHAT_SWIPE_TO_REPLY_BACKGROUND:w(colors.bgFloating),
+    CONTENT_INVENTORY_OVERLAY_TEXT_PRIMARY:w(colors.textPrimary+"d9"),
+    CONTENT_INVENTORY_OVERLAY_TEXT_SECONDARY:w(colors.textPrimary+"b3"),
+    CONTEXT_MENU_BACKDROP_BACKGROUND:w("#000000b3"),
+    CONTROL_BRAND_FOREGROUND:w(brand),
+    CONTROL_BRAND_FOREGROUND_NEW:w(brand),
+    CONTROL_CONNECTED_BACKGROUND_DEFAULT:w(colors.success),
+    CONTROL_CONNECTED_BORDER_DEFAULT:w(colors.success),
+    CONTROL_CRITICAL_PRIMARY_BACKGROUND_DEFAULT:w(colors.danger),
+    CONTROL_CRITICAL_PRIMARY_TEXT_DEFAULT:w("#ffffff"),
+    CONTROL_PRIMARY_BACKGROUND_DEFAULT:w(brand),
+    CONTROL_PRIMARY_TEXT_DEFAULT:w("#ffffff"),
+    CONTROL_SECONDARY_BACKGROUND_ACTIVE:w(colors.muted),
+    CONTROL_SECONDARY_BACKGROUND_DEFAULT:w(colors.iconMuted),
+    CONTROL_SECONDARY_BORDER_DEFAULT:w(brand),
+    CONTROL_SECONDARY_TEXT_DEFAULT:w("#ffffff"),
+    CUSTOM_STATUS_BUBBLE_BG:w(colors.bgTertiary),
+    DEPRECATED_CARD_BG:w(colors.cardPrimary),
+    DEPRECATED_CARD_EDITABLE_BG:w(colors.cardSecondary),
+    DEPRECATED_QUICKSWITCHER_INPUT_BACKGROUND:w(colors.input),
+    DEPRECATED_QUICKSWITCHER_INPUT_PLACEHOLDER:w(colors.muted),
+    DEPRECATED_STORE_BG:w(colors.bgPrimary),
+    DEPRECATED_TEXT_INPUT_BG:w(colors.input),
+    DEPRECATED_TEXT_INPUT_BORDER:w(colors.bgAlt),
+    DEPRECATED_TEXT_INPUT_BORDER_DISABLED:w(colors.bgSecondary),
+    DEPRECATED_TEXT_INPUT_BORDER_HOVER:w(brand),
+    DEPRECATED_TEXT_INPUT_PREFIX:w(colors.muted),
+    ELEVATION_HIGH:w(colors.bgFloating),
+    ELEVATION_LOW:w(colors.bgFloating),
+    ELEVATION_MEDIUM:w(colors.bgFloating),
+    ELEVATION_STROKE:w(colors.muted),
+    EMBED_BACKGROUND:w(colors.cardPrimary),
+    EMBED_BACKGROUND_ALTERNATE:w(colors.cardSecondary),
+    EXPRESSION_PICKER_BG:w(colors.bgFloating),
+    FOCUS_PRIMARY:w(brand),
+    GUILD_HEADER_TEXT_SHADOW:w(colors.bgTertiary+"88"),
+    GUILD_NOTIFICATIONS_BOTTOM_SHEET_PILL_BACKGROUND:w(colors.bgPrimary),
+    GUILD_PROFILE_BANNER_BACKGROUND_DEFAULT:w(colors.bgTertiary),
+    HEADER_PRIMARY:w(colors.textPrimary),
+    HEADER_SECONDARY:w(colors.textSecond),
+    HOME_BACKGROUND:w(colors.bgPrimary),
+    ICON_FEEDBACK_CRITICAL:w(colors.danger),
+    ICON_FEEDBACK_INFO:w(brand),
+    ICON_FEEDBACK_NOTIFICATION:w(colors.danger),
+    ICON_FEEDBACK_POSITIVE:w(colors.success),
+    ICON_FEEDBACK_WARNING:w(colors.warning),
+    ICON_MUTED:w(colors.iconMuted),
+    ICON_OVERLAY_DARK:w("#2f3035"),
+    ICON_OVERLAY_LIGHT:w("#ffffff"),
+    ICON_STATUS_DND:w(colors.danger),
+    ICON_STATUS_IDLE:w(colors.warning),
+    ICON_STATUS_OFFLINE:w(colors.muted),
+    ICON_STATUS_ONLINE:w(colors.success),
+    ICON_STRONG:w(colors.textPrimary),
+    ICON_SUBTLE:w(colors.muted),
+    ICON_TRANSPARENT:w("#00000000"),
+    ICON_VOICE_MUTED:w(colors.danger),
+    INFO_DANGER_BACKGROUND:w(colors.bgFloating),
+    INFO_DANGER_FOREGROUND:w(colors.bgPrimary),
+    INFO_DANGER_TEXT:w(colors.danger),
+    INFO_HELP_BACKGROUND:w(colors.bgFloating),
+    INFO_HELP_FOREGROUND:w(colors.bgPrimary),
+    INFO_HELP_TEXT:w(colors.textPrimary),
+    INFO_POSITIVE_BACKGROUND:w(colors.bgFloating),
+    INFO_POSITIVE_FOREGROUND:w(colors.bgPrimary),
+    INFO_POSITIVE_TEXT:w(colors.textPrimary),
+    INFO_WARNING_BACKGROUND:w(colors.bgFloating),
+    INFO_WARNING_FOREGROUND:w(colors.bgPrimary),
+    INFO_WARNING_TEXT:w(colors.textPrimary),
+    INPUT_BACKGROUND:w(colors.input),
+    INPUT_BACKGROUND_DEFAULT:w(colors.bgPrimary),
+    INPUT_BORDER_DEFAULT:w(colors.iconMuted+"52"),
+    INPUT_PLACEHOLDER_TEXT_DEFAULT:w(colors.muted),
+    INPUT_TEXT_DEFAULT:w(colors.textPrimary),
+    INPUT_TEXT_ERROR_DEFAULT:w(colors.textPrimary),
+    INTERACTIVE_ACTIVE:w(colors.textPrimary),
+    INTERACTIVE_BACKGROUND_ACTIVE:w(colors.iconMuted+"7a"),
+    INTERACTIVE_BACKGROUND_HOVER:w(colors.iconMuted+"4d"),
+    INTERACTIVE_BACKGROUND_SELECTED:w(colors.iconMuted+"99"),
+    INTERACTIVE_HOVER:w(brand),
+    INTERACTIVE_ICON_ACTIVE:w("#ffffff"),
+    INTERACTIVE_ICON_DEFAULT:w(colors.muted),
+    INTERACTIVE_ICON_HOVER:w(colors.textPrimary),
+    INTERACTIVE_MUTED:w(colors.iconMuted),
+    INTERACTIVE_NORMAL:w(colors.icon),
+    INTERACTIVE_TEXT_ACTIVE:w("#ffffff"),
+    INTERACTIVE_TEXT_DEFAULT:w(colors.muted),
+    INTERACTIVE_TEXT_HOVER:w(colors.textPrimary),
+    KEYBOARD:w(colors.input),
+    LEGACY_ANDROID_BLUR_OVERLAY_DEFAULT:w(colors.bgTertiary+"80"),
+    LEGACY_ANDROID_BLUR_OVERLAY_ULTRA_THIN:w("#00000006"),
+    LEGACY_BLUR_FALLBACK_DEFAULT:w(colors.bgTertiary+"f9"),
+    LEGACY_BLUR_FALLBACK_ULTRA_THIN:w("#000000f2"),
+    LOGO_PRIMARY:w(brand),
+    MENTION_BACKGROUND:w(brand+"33"),
+    MENTION_BADGE:w(colors.danger),
+    MENTION_FOREGROUND:w(brand),
+    MESSAGE_AUTOMOD_BACKGROUND_DEFAULT:w(colors.danger+"0d"),
+    MESSAGE_AUTOMOD_BACKGROUND_HOVER:w(colors.danger+"1a"),
+    MESSAGE_BACKGROUND_HOVER:w(colors.bgTertiary+"0f"),
+    MESSAGE_HIGHLIGHT_BACKGROUND_DEFAULT:w(brand+"14"),
+    MESSAGE_HIGHLIGHT_BACKGROUND_HOVER:w(brand+"0f"),
+    MESSAGE_MENTIONED_BACKGROUND_DEFAULT:w(colors.warning+"1a"),
+    MESSAGE_MENTIONED_BACKGROUND_HOVER:w(colors.warning+"14"),
+    MESSAGE_REACTED_BACKGROUND_DEFAULT:w(brand+"26"),
+    MESSAGE_REACTED_TEXT_DEFAULT:w(colors.textPrimary),
+    MOBILE_ACTIONSHEET_GRADIENT_BACKGROUND_DEFAULT:w(colors.bgPrimary),
+    MOBILE_ALERT_BACKGROUND_DEFAULT:w(colors.bgSecondary),
+    MOBILE_ANDROID_BUTTON_BACKGROUND_RIPPLE:w("#ffffff12"),
+    MOBILE_BACKGROUND_SCRIM_OPAQUE:w("#000000"),
+    MOBILE_COACHMARK_BACKGROUND_DEFAULT:w(colors.bgTertiary),
+    MOBILE_EXPRESSION_PICKER_BACKGROUND_DEFAULT:w(colors.bgPrimary),
+    MOBILE_TEXT_HEADING_PRIMARY:w(colors.textPrimary),
+    MOBILE_TOAST_BACKGROUND_DEFAULT:w(colors.bgTertiary),
+    MOBILE_TYPING_INDICATOR_BACKGROUND_DEFAULT:w(colors.bgPrimary),
+    MODAL_BACKGROUND:w(colors.bgFloating),
+    MODAL_FOOTER_BACKGROUND:w(colors.bgSecondary),
+    NAVIGATOR_HEADER_TINT:w("#ffffff"),
+    NAV_BAR_BACKGROUND:w(colors.bgSecondary),
+    NOTICE_BACKGROUND_POSITIVE:w(colors.success),
+    OVERLAY_BACKDROP_LIGHTBOX:w("#000000eb"),
+    PANEL_BG:w(colors.bgFloating),
+    POLLS_NORMAL_FILL_HOVER:w(colors.cardPrimary),
+    POLLS_NORMAL_IMAGE_BACKGROUND:w(colors.bgTertiary),
+    POLLS_VICTOR_FILL:w(colors.success+"33"),
+    POLLS_VOTED_FILL:w(brand+"33"),
+    PREMIUM_NITRO_PINK_TEXT:w(brand),
+    PROFILE_BODY_BACKGROUND:w(colors.bgPrimary),
+    PROFILE_BODY_BACKGROUND_HOVER:w(colors.bgSecondary),
+    PROFILE_GRADIENT_NOTE_BACKGROUND:w("#0000004d"),
+    PROFILE_GRADIENT_OVERLAY:w("#00000099"),
+    PROFILE_GRADIENT_OVERLAY_SYNCED_WITH_USER_THEME:w("#000000cc"),
+    PROFILE_GRADIENT_ROLE_PILL_BACKGROUND:w(colors.bgTertiary+"80"),
+    PROFILE_GRADIENT_ROLE_PILL_BORDER:w("#ffffff33"),
+    PROFILE_GRADIENT_SECTION_BOX:w("#00000073"),
+    REDESIGN_ACTIVITY_CARD_BACKGROUND:w(colors.cardPrimary),
+    REDESIGN_ACTIVITY_CARD_BACKGROUND_PRESSED:w(colors.cardSecondary),
+    REDESIGN_ACTIVITY_CARD_BADGE_ICON:w(colors.muted),
+    REDESIGN_BUTTON_ACTIVE_BACKGROUND:w(colors.success),
+    REDESIGN_BUTTON_ACTIVE_PRESSED_BACKGROUND:w(colors.brandHover),
+    REDESIGN_BUTTON_ACTIVE_TEXT:w("#ffffff"),
+    REDESIGN_BUTTON_DANGER_BACKGROUND:w(colors.danger),
+    REDESIGN_BUTTON_DESTRUCTIVE_BACKGROUND:w(colors.danger),
+    REDESIGN_BUTTON_DESTRUCTIVE_PRESSED_BACKGROUND:w(colors.danger),
+    REDESIGN_BUTTON_DESTRUCTIVE_TEXT:w("#ffffff"),
+    REDESIGN_BUTTON_OVERLAY_ALPHA_BACKGROUND:w("#0000008a"),
+    REDESIGN_BUTTON_OVERLAY_ALPHA_PRESSED_BACKGROUND:w("#000000a3"),
+    REDESIGN_BUTTON_OVERLAY_ALPHA_TEXT:w("#ffffff"),
+    REDESIGN_BUTTON_POSITIVE_BACKGROUND:w(colors.success),
+    REDESIGN_BUTTON_PREMIUM_PRIMARY_PINK_FOR_GRADIENT:w(brand),
+    REDESIGN_BUTTON_PREMIUM_PRIMARY_PRESSED_BACKGROUND:w("#0000001a"),
+    REDESIGN_BUTTON_PREMIUM_PRIMARY_PURPLE_FOR_GRADIENT:w(colors.brandHover),
+    REDESIGN_BUTTON_PREMIUM_PRIMARY_PURPLE_FOR_GRADIENT_2:w(colors.brandHover),
+    REDESIGN_BUTTON_PRIMARY_ALT_BORDER:w(brand),
+    REDESIGN_BUTTON_PRIMARY_BACKGROUND:w(brand),
+    REDESIGN_BUTTON_PRIMARY_OVERLAY_BACKGROUND:w("#ffffff"),
+    REDESIGN_BUTTON_PRIMARY_OVERLAY_PRESSED_BACKGROUND:w(colors.textPrimary),
+    REDESIGN_BUTTON_PRIMARY_OVERLAY_TEXT:w(colors.bgTertiary),
+    REDESIGN_BUTTON_PRIMARY_PRESSED_BACKGROUND:w(colors.brandHover),
+    REDESIGN_BUTTON_PRIMARY_TEXT:w("#ffffff"),
+    REDESIGN_BUTTON_SECONDARY_BACKGROUND:w(colors.bgAlt),
+    REDESIGN_BUTTON_SECONDARY_ALT_BACKGROUND:w(colors.cardSecondary),
+    REDESIGN_BUTTON_SECONDARY_BORDER:w("#ffffff14"),
+    REDESIGN_BUTTON_SECONDARY_OVERLAY_BACKGROUND:w("#0000008a"),
+    REDESIGN_BUTTON_SECONDARY_OVERLAY_PRESSED_BACKGROUND:w("#000000a3"),
+    REDESIGN_BUTTON_SECONDARY_OVERLAY_TEXT:w("#ffffff"),
+    REDESIGN_BUTTON_SECONDARY_PRESSED_BACKGROUND:w(colors.bgSecondary),
+    REDESIGN_BUTTON_SECONDARY_PRESSED_BORDER:w("#00000000"),
+    REDESIGN_BUTTON_SECONDARY_TEXT:w(colors.textPrimary),
+    REDESIGN_BUTTON_SELECTED_BACKGROUND:w(brand+"3d"),
+    REDESIGN_BUTTON_SELECTED_PRESSED_BACKGROUND:w(brand+"47"),
+    REDESIGN_BUTTON_SELECTED_TEXT:w(brand),
+    REDESIGN_BUTTON_TERTIARY_BACKGROUND:w(colors.bgTertiary),
+    REDESIGN_BUTTON_TERTIARY_PRESSED_BACKGROUND:w(colors.bgFloating),
+    REDESIGN_BUTTON_TERTIARY_PRESSED_TEXT:w(colors.muted),
+    REDESIGN_BUTTON_TERTIARY_TEXT:w(colors.textPrimary),
+    REDESIGN_CHANNEL_CATEGORY_NAME_TEXT:w(colors.muted),
+    REDESIGN_CHANNEL_NAME_MUTED_TEXT:w(colors.muted),
+    REDESIGN_CHANNEL_NAME_TEXT:w(colors.textPrimary),
+    REDESIGN_CHAT_INPUT_BACKGROUND:w(colors.input),
+    REDESIGN_IMAGE_BUTTON_PRESSED_BACKGROUND:w("#00000014"),
+    REDESIGN_INPUT_CONTROL_ACTIVE_BG:w(brand+"26"),
+    REDESIGN_INPUT_CONTROL_SELECTED:w(brand),
+    REDESIGN_MENTION_BADGE:w(colors.danger),
+    SCROLLBAR_AUTO_THUMB:w(colors.scrollbar),
+    SCROLLBAR_AUTO_TRACK:w("transparent"),
+    SCROLLBAR_THIN_THUMB:w(colors.scrollbar),
+    SCROLLBAR_THIN_TRACK:w("transparent"),
+    SPINE_DEFAULT:w(brand),
+    SPOILER_HIDDEN_BACKGROUND:w(colors.bgPrimary),
+    SPOILER_REVEALED_BACKGROUND:w(colors.bgTertiary),
+    STAGE_CARD_PILL_BG:w(colors.bgPrimary),
+    STATUS_BAR_BACKGROUND:w(colors.bgTertiary),
+    STATUS_DANGER:w(colors.danger),
+    STATUS_DANGER_BACKGROUND:w(colors.danger),
+    STATUS_DANGER_TEXT:w("#FFFFFF"),
+    STATUS_DND:w(colors.danger),
+    STATUS_IDLE:w(colors.warning),
+    STATUS_OFFLINE:w(colors.muted),
+    STATUS_ONLINE:w(colors.success),
+    STATUS_POSITIVE:w(colors.success),
+    STATUS_POSITIVE_BACKGROUND:w(colors.success),
+    STATUS_POSITIVE_TEXT:w("#FFFFFF"),
+    STATUS_SPEAKING:w(colors.success),
+    STATUS_WARNING:w(colors.warning),
+    STATUS_WARNING_BACKGROUND:w(colors.warning),
+    STATUS_WARNING_TEXT:w("#000000"),
+    TEXT_BRAND:w(brand),
+    TEXT_DANGER:w(colors.danger),
+    TEXT_DEFAULT:w(colors.textPrimary),
+    TEXT_FEEDBACK_CRITICAL:w(colors.danger),
+    TEXT_FEEDBACK_INFO:w(brand),
+    TEXT_FEEDBACK_POSITIVE:w(colors.success),
+    TEXT_FEEDBACK_WARNING:w(colors.warning),
+    TEXT_LINK:w(colors.link),
+    TEXT_LINK_LOW_SATURATION:w(colors.muted),
+    TEXT_MENTION:w(brand),
+    TEXT_MUTED:w(colors.muted),
+    TEXT_NORMAL:w(colors.text),
+    TEXT_OVERLAY_DARK:w("#2f3035"),
+    TEXT_OVERLAY_LIGHT:w("#ffffff"),
+    TEXT_POSITIVE:w(colors.success),
+    TEXT_PRIMARY:w(colors.textPrimary),
+    TEXT_SECONDARY:w(colors.textSecond),
+    TEXT_STATUS_DND:w(colors.danger),
+    TEXT_STATUS_IDLE:w(colors.warning),
+    TEXT_STATUS_OFFLINE:w(colors.muted),
+    TEXT_STATUS_ONLINE:w(colors.success),
+    TEXT_STRONG:w(colors.textPrimary),
+    TEXT_SUBTLE:w(colors.muted),
+    TEXT_WARNING:w(colors.warning),
+    TEXTBOX_MARKDOWN_SYNTAX:w(brand),
+    THEME_LOCKED_BLUR_FALLBACK:w(colors.bgPrimary+"f5"),
+    THREAD_CHANNEL_SPINE:w(colors.muted+"44"),
+    TYPING_INDICATOR_BG:w("#00000066"),
+    VOICE_VIDEO_VIDEO_TILE_BACKGROUND:w(colors.bgFloating+"66"),
+    VOICE_VIDEO_VIDEO_TILE_BLUR_FALLBACK:w(colors.bgPrimary+"7a"),
+    WHITE:w("#ffffff"),
+    AUTOCOMPLETE_BG:w(colors.cardPrimary),
+    AUTOMOD_QUEUED_FOR_REVIEW_BACKGROUND:w(colors.warning+"33"),
+    AUTOMOD_QUEUED_FOR_REVIEW_BACKGROUND_HOVER:w(colors.warning+"4d"),
+    ACTIVITY_CARD_BACKGROUND:w(colors.cardPrimary),
+    GRADIENT_PROGRESS_PILL_BACKGROUND:w(colors.muted)
+  };
+  const finalSC=Object.assign({},themeExtra.semanticColors,builtSC);
+
+  const builtRC={
+    BG_GRADIENT_CRIMSON_MOON_2:"#000000",
+    PRIMARY_100:colors.textPrimary,
+    PRIMARY_130:colors.textPrimary,
+    PRIMARY_200:colors.textSecond,
+    PRIMARY_230:colors.textSecond,
+    PRIMARY_300:colors.text,
+    PRIMARY_330:colors.text,
+    PRIMARY_360:colors.text,
+    PRIMARY_400:colors.muted,
+    PRIMARY_460:colors.input,
+    PRIMARY_500:colors.bgAlt,
+    PRIMARY_530:colors.bgAlt,
+    PRIMARY_560:colors.scrollbar,
+    PRIMARY_600:colors.bgSecondary,
+    PRIMARY_630:colors.bgPrimary,
+    PRIMARY_660:colors.bgPrimary,
+    PRIMARY_700:brand,
+    PRIMARY_800:colors.bgTertiary,
+    PRIMARY_900:colors.bgFloating,
+    BLACK_500:"#000000",
+    BLACK_530:"#000000",
+    BLACK_560:"#000000",
+    BLACK_600:"#000000",
+    BLACK_630:"#000000",
+    BLACK_660:"#000000",
+    BLACK_700:"#000000",
+    BLACK_730:"#000000",
+    BLACK_760:"#000000",
+    BLACK_800:"#000000",
+    BLACK_830:"#000000",
+    BLACK_860:"#000000",
+    BLACK_900:"#000000",
+    BRAND_230:colors.textPrimary,
+    BRAND_260:brand,
+    BRAND_360:brand,
+    BRAND_500:brand,
+    BRAND_560:colors.brandHover,
+    BRAND_600:colors.brandHover,
+    BLUE_500:brand,
+    RED_400:colors.danger,
+    RED_430:colors.danger,
+    RED_460:colors.danger,
+    RED_500:colors.danger,
+    GREEN_360:colors.success,
+    WHITE_500:colors.textPrimary,
+    YELLOW_260:brand,
+    YELLOW_300:colors.warning,
+    ORANGE_345:brand,
+    LOL_TEXT_LIGHT:brand,
+    LOL_TEXT_DARK:brand,
+    PLUM_1:colors.textPrimary,
+    PLUM_3:brand,
+    PLUM_4:colors.textPrimary,
+    PLUM_6:colors.textPrimary,
+    PLUM_9:colors.muted,
+    PLUM_10:colors.muted,
+    PLUM_11:colors.bgTertiary,
+    PLUM_13:colors.bgPrimary,
+    PLUM_15:colors.bgPrimary,
+    PLUM_16:colors.bgPrimary,
+    PLUM_17:colors.bgTertiary,
+    PLUM_18:colors.bgTertiary,
+    PLUM_19:colors.bgPrimary,
+    PLUM_20:colors.bgTertiary,
+    PLUM_22:colors.bgTertiary,
+    PLUM_23:colors.bgPrimary,
+    PLUM_24:colors.bgPrimary,
+    PLUM_25:colors.bgPrimary,
+    BADGE_BACKGROUND_DEFAULT_DARK:colors.iconMuted+"29",
+    BADGE_BACKGROUND_DEFAULT_DARKER:colors.scrollbar+"29",
+    BADGE_BACKGROUND_DEFAULT_LIGHT:colors.muted+"29",
+    BADGE_BACKGROUND_DEFAULT_MIDNIGHT:colors.scrollbar+"33",
+    BADGE_TEXT_DEFAULT_DARK:colors.textPrimary,
+    BADGE_TEXT_DEFAULT_DARKER:brand,
+    BADGE_TEXT_DEFAULT_LIGHT:colors.bgTertiary,
+    BADGE_TEXT_DEFAULT_MIDNIGHT:colors.textPrimary
+  };
+  const finalRC=Object.assign({},themeExtra.rawColors,builtRC);
+
+  const plusSection={};
+  if(themeExtra.plus.version!=null)plusSection.version=themeExtra.plus.version;
+  if(themeExtra.plus.iconPack)plusSection.iconPack=themeExtra.plus.iconPack;
+  plusSection.mentionLineColor=colors.mentionLine;
+  if(themeExtra.plus.customOverlays)plusSection.customOverlays=true;
+  if(themeExtra.plus.icons&&Object.keys(themeExtra.plus.icons).length>0)plusSection.icons={...themeExtra.plus.icons};
+  // Merge any other plus keys from import
+  const knownPlusKeys=new Set(['version','iconPack','mentionLineColor','customOverlays','icons']);
+  for(const[k,v]of Object.entries(themeExtra.plus)){if(!knownPlusKeys.has(k))plusSection[k]=v;}
+
+  const result={
+    name:themeMeta.name,
+    description:themeMeta.description,
+    version:themeMeta.version||"3",
+    authors:[{name:themeMeta.authorName,id:themeMeta.authorId}],
+    semanticColors:finalSC,
+    rawColors:finalRC,
+    plus:plusSection,
+    spec:themeMeta.spec||2
+  };
+  // Add background if present
+  if(themeExtra.background)result.background=themeExtra.background;
+  // Add any other top-level fields
+  Object.assign(result,themeExtra.other);
+  return JSON.stringify(result,null,2);
 }
 function copyJSON(){navigator.clipboard.writeText(themeToJSON()).then(()=>showToast('JSON copied!'))}
 function downloadJSON(){
   const b=new Blob([themeToJSON()],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='theme.json';a.click();URL.revokeObjectURL(a.href);
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(themeMeta.name||'theme').replace(/\s+/g,'_')+'.json';a.click();URL.revokeObjectURL(a.href);
 }
 function openFile(){
   const inp=document.createElement('input');inp.type='file';inp.accept='.json';
   inp.onchange=e=>{
     const f=e.target.files[0];if(!f)return;
     const r=new FileReader();r.onload=()=>{
-      try{const o=JSON.parse(r.result);const c=o.colors||o;
-        Object.assign(colors,jsonMapToColors(c));render();showToast('Theme loaded!');
+      try{const o=JSON.parse(r.result);importThemeObj(o);render();showToast('Theme loaded!');
       }catch{showToast('Invalid JSON')}
     };r.readAsText(f);
   };inp.click();
 }
 function importJSON(){
   const txt=document.getElementById('jsonArea')?.value;if(!txt)return;
-  try{const o=JSON.parse(txt);const c=o.colors||o;
-    Object.assign(colors,jsonMapToColors(c));render();showToast('Theme imported!');
+  try{const o=JSON.parse(txt);importThemeObj(o);render();showToast('Theme imported!');
   }catch{showToast('Invalid JSON')}
 }
-function jsonMapToColors(c){
-  const m={};
-  if(c.BRAND)m.brand=c.BRAND;if(c.BRAND_HOVER)m.brandHover=c.BRAND_HOVER;if(c.LINK)m.link=c.LINK;
-  if(c.TEXT_NORMAL)m.text=c.TEXT_NORMAL;if(c.TEXT_MUTED)m.muted=c.TEXT_MUTED;
-  if(c.HEADER_PRIMARY)m.textPrimary=c.HEADER_PRIMARY;if(c.HEADER_SECONDARY)m.textSecond=c.HEADER_SECONDARY;
-  if(c.BACKGROUND_PRIMARY)m.bgPrimary=c.BACKGROUND_PRIMARY;if(c.BACKGROUND_SECONDARY)m.bgSecondary=c.BACKGROUND_SECONDARY;
-  if(c.BACKGROUND_SECONDARY_ALT)m.bgAlt=c.BACKGROUND_SECONDARY_ALT;if(c.BACKGROUND_TERTIARY)m.bgTertiary=c.BACKGROUND_TERTIARY;
-  if(c.BACKGROUND_FLOATING)m.bgFloating=c.BACKGROUND_FLOATING;if(c.BACKGROUND_NESTED_FLOATING)m.bgNested=c.BACKGROUND_NESTED_FLOATING;
-  if(c.CARD_PRIMARY_BG)m.cardPrimary=c.CARD_PRIMARY_BG;if(c.CARD_SECONDARY_BG)m.cardSecondary=c.CARD_SECONDARY_BG;
-  if(c.INPUT_BACKGROUND)m.input=c.INPUT_BACKGROUND;
-  if(c.STATUS_GREEN)m.success=c.STATUS_GREEN;if(c.STATUS_YELLOW)m.warning=c.STATUS_YELLOW;if(c.STATUS_RED)m.danger=c.STATUS_RED;
-  if(c.RIPPLE_COLOR)m.ripple=c.RIPPLE_COLOR;if(c.SCROLLBAR_THIN_THUMB)m.scrollbar=c.SCROLLBAR_THIN_THUMB;
-  if(c.MENTION_HIGHLIGHT)m.mentionLine=c.MENTION_HIGHLIGHT;
-  if(c.INTERACTIVE_NORMAL)m.icon=c.INTERACTIVE_NORMAL;if(c.INTERACTIVE_MUTED)m.iconMuted=c.INTERACTIVE_MUTED;
-  return m;
+function importThemeObj(o){
+  // Reset extras
+  themeExtra={semanticColors:{},rawColors:{},background:null,plus:{version:"0",iconPack:"",customOverlays:false,icons:{}},other:{}};
+
+  // Mapping from semanticColor keys to internal color keys
+  const scMap={
+    BACKGROUND_ACCENT:'brand',
+    BACKGROUND_PRIMARY:'bgPrimary',BACKGROUND_SECONDARY:'bgSecondary',
+    BACKGROUND_SECONDARY_ALT:'bgAlt',BACKGROUND_TERTIARY:'bgTertiary',
+    BACKGROUND_FLOATING:'bgFloating',BACKGROUND_NESTED_FLOATING:'bgNested',
+    CARD_PRIMARY_BG:'cardPrimary',CARD_SECONDARY_BG:'cardSecondary',
+    CHANNELTEXTAREA_BACKGROUND:'input',REDESIGN_CHAT_INPUT_BACKGROUND:'input',
+    CHAT_INPUT_CONTAINER_BACKGROUND:'input',
+    TEXT_NORMAL:'text',TEXT_MUTED:'muted',
+    TEXT_PRIMARY:'textPrimary',HEADER_PRIMARY:'textPrimary',
+    TEXT_SECONDARY:'textSecond',HEADER_SECONDARY:'textSecond',
+    TEXT_LINK:'link',
+    SCROLLBAR_THIN_THUMB:'scrollbar',
+    INTERACTIVE_NORMAL:'icon',INTERACTIVE_MUTED:'iconMuted',
+    STATUS_DANGER:'danger',STATUS_DND:'danger',
+    STATUS_ONLINE:'success',STATUS_POSITIVE:'success',
+    STATUS_IDLE:'warning',STATUS_OFFLINE:'muted',
+    ANDROID_RIPPLE:'ripple',
+    MENTION_BADGE:'danger',
+    CHANNEL_ICON:'icon'
+  };
+
+  if(o.semanticColors){
+    const sc=o.semanticColors;
+    for(const[k,v]of Object.entries(sc)){
+      const arr=Array.isArray(v)?v:null;
+      if(!arr||!arr[0])continue;
+      if(scMap[k]){
+        colors[scMap[k]]=arr[0];
+      }else{
+        // Store unmapped keys for round-trip
+        themeExtra.semanticColors[k]=arr;
+      }
+    }
+  }
+
+  if(o.rawColors){
+    const rcMap={BRAND_500:'brand',RED_500:'danger',PRIMARY_600:'bgPrimary',PRIMARY_700:'bgPrimary',PRIMARY_800:'bgTertiary',PRIMARY_100:'textPrimary'};
+    for(const[k,v]of Object.entries(o.rawColors)){
+      if(rcMap[k]){
+        colors[rcMap[k]]=v;
+      }else{
+        themeExtra.rawColors[k]=v;
+      }
+    }
+  }
+
+  // Plus section
+  if(o.plus){
+    themeExtra.plus.version=o.plus.version||"0";
+    themeExtra.plus.iconPack=o.plus.iconPack||"";
+    themeExtra.plus.customOverlays=!!o.plus.customOverlays;
+    if(o.plus.icons)themeExtra.plus.icons={...o.plus.icons};
+    if(o.plus.mentionLineColor)colors.mentionLine=o.plus.mentionLineColor;
+    // Preserve unknown plus keys
+    const knownPK=new Set(['version','iconPack','customOverlays','icons','mentionLineColor']);
+    for(const[k,v]of Object.entries(o.plus)){if(!knownPK.has(k))themeExtra.plus[k]=v;}
+  }
+
+  // Background
+  if(o.background)themeExtra.background=o.background;
+
+  // Meta
+  if(o.name)themeMeta.name=o.name;
+  if(o.description)themeMeta.description=o.description;
+  if(o.version)themeMeta.version=o.version;
+  if(o.spec)themeMeta.spec=o.spec;
+  if(o.authors&&o.authors[0]){
+    themeMeta.authorName=o.authors[0].name||themeMeta.authorName;
+    themeMeta.authorId=o.authors[0].id||themeMeta.authorId;
+  }
+
+  // Preserve other top-level fields
+  const knownKeys=new Set(['name','description','version','authors','semanticColors','rawColors','plus','spec','background']);
+  for(const[k,v]of Object.entries(o)){
+    if(!knownKeys.has(k))themeExtra.other[k]=v;
+  }
+
+  // Also support old flat format
+  if(o.colors){
+    const c=o.colors;
+    if(c.BRAND)colors.brand=c.BRAND;if(c.LINK)colors.link=c.LINK;
+    if(c.TEXT_NORMAL)colors.text=c.TEXT_NORMAL;if(c.TEXT_MUTED)colors.muted=c.TEXT_MUTED;
+    if(c.HEADER_PRIMARY)colors.textPrimary=c.HEADER_PRIMARY;if(c.HEADER_SECONDARY)colors.textSecond=c.HEADER_SECONDARY;
+    if(c.BACKGROUND_PRIMARY)colors.bgPrimary=c.BACKGROUND_PRIMARY;if(c.BACKGROUND_SECONDARY)colors.bgSecondary=c.BACKGROUND_SECONDARY;
+    if(c.BACKGROUND_SECONDARY_ALT)colors.bgAlt=c.BACKGROUND_SECONDARY_ALT;if(c.BACKGROUND_TERTIARY)colors.bgTertiary=c.BACKGROUND_TERTIARY;
+    if(c.BACKGROUND_FLOATING)colors.bgFloating=c.BACKGROUND_FLOATING;if(c.BACKGROUND_NESTED_FLOATING)colors.bgNested=c.BACKGROUND_NESTED_FLOATING;
+    if(c.CARD_PRIMARY_BG)colors.cardPrimary=c.CARD_PRIMARY_BG;if(c.CARD_SECONDARY_BG)colors.cardSecondary=c.CARD_SECONDARY_BG;
+  }
 }
 
 render();
