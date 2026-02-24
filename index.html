@@ -535,6 +535,288 @@ function renderHome(){
   <div class="phoneWrap">
     <div class="rail">
       ${SERVERS.map((s,i)=>{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Theme Studio — Mobile</title>
+<style>
+:root{
+  --brand:#8200c8;--brandHover:#3d007a;--link:#8200c8;
+  --text:#cbadff;--muted:#72767d;--textPrimary:#e9d9ff;--textSecond:#d79dff;
+  --bgPrimary:#0f0f10;--bgSecondary:#121214;--bgAlt:#1a1a1e;--bgTertiary:#0c0c0e;
+  --bgFloating:#18181b;--bgNested:#0e0e10;
+  --cardPrimary:#0e0e10;--cardSecondary:#0f0f12;--input:#121214;
+  --success:#3ba55c;--warning:#faa61a;--danger:#ed4245;
+  --ripple:#5b2a82;--scrollbar:#2b2b2b;--mentionLine:#b592e6;
+  --icon:#cbadff;--iconMuted:#8a8a8a;
+  --fabBg:#5865f2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;color:var(--text);font:14px/1.4 'Inter',system-ui,-apple-system,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font:inherit;color:inherit;background:none;border:none;outline:none}
+
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column}
+
+.topToggle{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bgSecondary);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.topToggle h1{font-size:14px;font-weight:800;color:var(--textPrimary)}
+.toggleBtn{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;background:var(--brand);color:#fff}
+
+.mainArea{flex:1;overflow:auto;position:relative}
+
+.phoneWrap{height:100%;display:flex;background:#000}
+
+.rail{width:64px;flex-shrink:0;background:var(--bgTertiary);padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:8px;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.srv{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff;cursor:pointer;transition:border-radius .2s,background .2s;overflow:hidden;flex-shrink:0}
+.srv:hover{border-radius:12px}
+.srv.active{border-radius:12px}
+.srv img{width:100%;height:100%;object-fit:cover}
+.srv.dm{background:var(--brand);border-radius:16px}
+.railLabel{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;text-align:center;padding:0 4px;width:100%}
+.railSep{width:32px;height:2px;border-radius:1px;background:rgba(255,255,255,.06);flex-shrink:0}
+
+.content{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bgPrimary)}
+
+.header{padding:14px 16px 0;flex-shrink:0}
+.header h2{font-size:24px;font-weight:800;color:#fff;margin-bottom:12px}
+.searchRow{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.searchBtn{width:40px;height:40px;border-radius:12px;background:var(--bgAlt);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.searchBtn svg{width:18px;height:18px;fill:var(--muted)}
+.addFriends{flex:1;height:40px;border-radius:12px;background:var(--bgAlt);display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted)}
+.addFriends svg{width:18px;height:18px;fill:var(--muted)}
+
+.featured{display:flex;gap:10px;padding:0 0 14px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+.featured::-webkit-scrollbar{display:none}
+.featCard{min-width:160px;height:100px;border-radius:14px;background:var(--bgAlt);overflow:hidden;flex-shrink:0;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:10px}
+.featCard .featName{font-weight:700;font-size:14px;color:#fff;position:relative;z-index:1}
+.featCard .featDesc{font-size:11px;color:rgba(255,255,255,.6);position:relative;z-index:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.dmList{flex:1;overflow-y:auto;padding:0 0 80px}
+.dm{display:flex;gap:12px;align-items:center;padding:10px 16px;transition:background .15s}
+.dm:active{background:rgba(255,255,255,.04)}
+.dmAva{width:40px;height:40px;border-radius:50%;flex-shrink:0;position:relative;overflow:visible}
+.dmAva .avaImg{width:40px;height:40px;border-radius:50%;object-fit:cover;background:linear-gradient(135deg,var(--bgAlt),var(--bgFloating))}
+.dmAva .statusDot{position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-radius:50%;border:3px solid var(--bgPrimary)}
+.statusDot.online{background:var(--success)}
+.statusDot.idle{background:var(--warning)}
+.statusDot.dnd{background:var(--danger)}
+.statusDot.offline{background:var(--muted)}
+.dmInfo{flex:1;min-width:0}
+.dmTop{display:flex;align-items:baseline;gap:6px}
+.dmName{font-weight:700;font-size:15px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dmBadge{font-size:11px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.1);color:var(--textSecond);flex-shrink:0;white-space:nowrap}
+.dmTime{margin-left:auto;font-size:12px;color:var(--muted);flex-shrink:0}
+.dmMsg{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.dmStar{color:var(--warning);margin-left:auto;flex-shrink:0;font-size:12px}
+
+.fab{position:fixed;bottom:68px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--fabBg);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:10}
+.fab svg{width:24px;height:24px;fill:#fff}
+
+.bottomNav{position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--bgSecondary);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-around;z-index:10;padding-bottom:env(safe-area-inset-bottom)}
+.navItem{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;color:var(--muted);padding:4px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.navItem.active{color:#fff}
+.navItem svg{width:22px;height:22px;fill:currentColor}
+.navItem .youAva{width:24px;height:24px;border-radius:50%;background:var(--bgAlt);border:2px solid transparent;position:relative}
+.navItem.active .youAva{border-color:#fff}
+.youAva .onlineDot{position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:var(--success);border:2px solid var(--bgSecondary)}
+
+/* Notifications */
+.notifPage{flex:1;display:flex;flex-direction:column;background:var(--bgPrimary);min-height:0}
+.notifHeader{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.notifHeader h2{font-size:24px;font-weight:800;color:#fff}
+.notifDots{width:36px;height:36px;border-radius:50%;background:var(--bgAlt);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted);cursor:pointer}
+.notifSep{height:1px;background:rgba(255,255,255,.06);margin:0 16px}
+.notifSection{font-size:12px;font-weight:700;color:var(--muted);padding:12px 16px 8px;text-transform:uppercase;letter-spacing:.04em}
+.notifList{flex:1;overflow-y:auto;padding-bottom:80px}
+.notifItem{display:flex;gap:12px;padding:12px 16px;align-items:flex-start}
+.notifItem:active{background:rgba(255,255,255,.04)}
+.notifAva{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--bgAlt),var(--bgFloating));flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px}
+.notifBody{flex:1;min-width:0}
+.notifText{font-size:14px;color:var(--text);line-height:1.4}
+.notifText b{color:#fff;font-weight:700}
+.notifQuote{margin-top:4px;padding-left:10px;border-left:3px solid var(--mentionLine);font-size:13px;color:var(--muted)}
+.notifTime{font-size:12px;color:var(--muted);flex-shrink:0;margin-top:2px}
+
+/* Profile */
+.profilePage{flex:1;display:flex;flex-direction:column;background:var(--bgPrimary);overflow-y:auto;padding-bottom:80px}
+.profileBanner{height:120px;background:linear-gradient(135deg,#1a0030,#0a0a15);position:relative;flex-shrink:0}
+.profileAvaWrap{position:absolute;bottom:-40px;left:20px}
+.profileAva{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--bgAlt),var(--bgFloating));border:4px solid var(--bgPrimary);display:flex;align-items:center;justify-content:center;font-size:36px}
+.profileStatusDot{position:absolute;bottom:4px;right:4px;width:20px;height:20px;border-radius:50%;background:var(--success);border:4px solid var(--bgPrimary)}
+.profileInfo{padding:52px 20px 0}
+.profileName{font-size:26px;font-weight:800;color:#fff}
+.profileHandle{font-size:14px;color:var(--muted);margin-top:2px}
+.profilePronouns{font-size:13px;color:var(--textSecond);margin-top:2px}
+.profileBadges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.profileBadge{width:28px;height:28px;border-radius:50%;background:var(--bgAlt);display:flex;align-items:center;justify-content:center;font-size:14px}
+.profileEditBtn{margin:16px 20px;padding:12px;border-radius:12px;background:var(--brand);color:#fff;font-weight:700;font-size:15px;text-align:center;cursor:pointer}
+.profileCard{margin:8px 20px;background:var(--cardPrimary);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.06)}
+.profileCardTitle{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.profileCardValue{font-size:15px;color:#fff;font-weight:600;display:flex;align-items:center;gap:8px}
+.profileAbout{font-size:14px;color:var(--text);line-height:1.6;white-space:pre-line}
+.profileMemberSince{margin-top:12px;font-size:13px;color:var(--muted)}
+.profileMemberSince span{color:var(--text)}
+
+.controls{padding:16px;background:var(--bgPrimary)}
+.controls h1{font-size:18px;font-weight:800;color:var(--textPrimary);margin-bottom:2px}
+.controls .sub{font-size:11px;color:var(--muted);margin-bottom:12px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.presetBtn{padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.presetBtn.primary{background:var(--brand);color:#fff}
+.presetBtn.sec{background:var(--bgAlt);color:var(--text);border:1px solid rgba(255,255,255,.08)}
+.presetBtn.ghost{color:var(--text)}
+.section{margin-bottom:16px}
+.section h2{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;font-weight:700}
+.field{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:8px;margin-bottom:6px;background:var(--bgSecondary)}
+.field .fLabel{flex:1;min-width:0}
+.field .fLabel span{display:block;font-size:12px;font-weight:700;color:var(--text)}
+.field .fLabel small{font-size:10px;color:var(--muted)}
+.field input[type="color"]{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;padding:0;cursor:pointer}
+.field input[type="text"]{width:72px;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:var(--bgAlt);color:var(--text);font-size:11px;font-family:monospace}
+.exportSection{margin-top:12px}
+.exportBtns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.exportTextarea{width:100%;min-height:100px;background:var(--bgSecondary);color:#d5d6db;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;font:11px/1.4 monospace;resize:vertical}
+.exportHint{font-size:10px;color:var(--muted);margin-top:6px}
+.exportHint b{color:var(--text)}
+
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--bgFloating);color:var(--text);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:opacity .2s;pointer-events:none;z-index:100;font-size:13px;font-weight:600;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="topToggle">
+    <h1>Theme Studio</h1>
+    <button class="toggleBtn" id="modeBtn" onclick="toggleMode()">Edit Colors</button>
+  </div>
+  <div class="mainArea" id="mainArea"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PRESETS={
+  purple:{brand:"#8200c8",brandHover:"#3d007a",link:"#8200c8",text:"#cbadff",muted:"#72767d",textPrimary:"#e9d9ff",textSecond:"#d79dff",bgPrimary:"#0f0f10",bgSecondary:"#121214",bgAlt:"#1a1a1e",bgTertiary:"#0c0c0e",bgFloating:"#18181b",bgNested:"#0e0e10",cardPrimary:"#0e0e10",cardSecondary:"#0f0f12",input:"#121214",success:"#3ba55c",warning:"#faa61a",danger:"#ed4245",ripple:"#5b2a82",scrollbar:"#2b2b2b",mentionLine:"#b592e6",icon:"#cbadff",iconMuted:"#8a8a8a",fabBg:"#5865f2"},
+  cobalt:{brand:"#0066cc",brandHover:"#003d7a",link:"#3399ff",text:"#a8c7e6",muted:"#5599cc",textPrimary:"#d6e8f5",textSecond:"#88b8dd",bgPrimary:"#0a0e14",bgSecondary:"#0c1018",bgAlt:"#111822",bgTertiary:"#080c12",bgFloating:"#0c1119",bgNested:"#090d13",cardPrimary:"#090d13",cardSecondary:"#0c1119",input:"#0c1018",success:"#3ba55c",warning:"#faa61a",danger:"#cc3333",ripple:"#1a4080",scrollbar:"#1a2840",mentionLine:"#5599cc",icon:"#a8c7e6",iconMuted:"#556677",fabBg:"#0066cc"},
+  default:{brand:"#5865f2",brandHover:"#4752c4",link:"#00aff4",text:"#dcddde",muted:"#72767d",textPrimary:"#ffffff",textSecond:"#b9bbbe",bgPrimary:"#36393f",bgSecondary:"#2f3136",bgAlt:"#3a3d44",bgTertiary:"#202225",bgFloating:"#18191c",bgNested:"#2f3136",cardPrimary:"#2f3136",cardSecondary:"#292b2f",input:"#40444b",success:"#3ba55c",warning:"#faa61a",danger:"#ed4245",ripple:"#4752c4",scrollbar:"#202225",mentionLine:"#5865f2",icon:"#b9bbbe",iconMuted:"#72767d",fabBg:"#5865f2"}
+};
+
+const COLOR_META={
+  brand:{l:"Brand",h:"Primary accent"},brandHover:{l:"Brand Hover",h:"Hover state"},link:{l:"Link",h:"Hyperlinks"},
+  text:{l:"Text",h:"Default text"},muted:{l:"Muted",h:"Secondary text"},textPrimary:{l:"Text Primary",h:"Headings"},textSecond:{l:"Text Secondary",h:"Timestamps"},
+  bgPrimary:{l:"BG Primary",h:"Main background"},bgSecondary:{l:"BG Secondary",h:"Secondary surface"},bgAlt:{l:"BG Alt",h:"Cards / rows"},bgTertiary:{l:"BG Tertiary",h:"Deepest bg"},bgFloating:{l:"BG Floating",h:"Floating panels"},bgNested:{l:"BG Nested",h:"Nested containers"},
+  cardPrimary:{l:"Card Primary",h:"Card bg"},cardSecondary:{l:"Card Secondary",h:"Card alt"},input:{l:"Input",h:"Input bg"},
+  success:{l:"Success",h:"Online"},warning:{l:"Warning",h:"Idle"},danger:{l:"Danger",h:"DND / error"},
+  ripple:{l:"Ripple",h:"Touch ripple"},scrollbar:{l:"Scrollbar",h:"Scroll thumb"},mentionLine:{l:"Mention",h:"Mention bar"},
+  icon:{l:"Icon",h:"Icon color"},iconMuted:{l:"Icon Muted",h:"Dim icons"},fabBg:{l:"FAB",h:"New DM button"}
+};
+
+let colors={...PRESETS.purple};
+let mode="preview";
+let activeTab="home";
+
+function applyColors(){
+  const r=document.documentElement.style;
+  for(const[k,v]of Object.entries(colors)){r.setProperty('--'+k,v)}
+}
+function camelToKebab(s){return s.replace(/([A-Z])/g,'-$1').toLowerCase()}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+const DMS=[
+  {name:"Matko802",badge:"",status:"online",msg:"Matko802: hey there!",time:"1h",star:true}
+];
+
+const SERVERS=[
+  {letter:"💬",type:"dm",bg:"var(--brand)"},
+  {letter:"M",bg:"#2f3136"},
+  {letter:"🌐",bg:"#2f3136"},
+  {letter:"",label:"NOTHING (R)"},
+  {letter:"J",bg:"#c0392b"},
+  {letter:"H",bg:"#2980b9"},
+  {letter:"🦊",bg:"#e67e22"},
+  {letter:"👤",bg:"#7f8c8d"},
+  {letter:"🏛",bg:"#2c3e50"},
+  {letter:"⬡",bg:"#1abc9c"},
+  {letter:"ls",bg:"#8e44ad"},
+  {letter:"📁",bg:"#3498db"},
+  {letter:"🔺",bg:"#ecf0f1"},
+  {letter:"A",bg:"#27ae60"},
+];
+
+const NOTIFICATIONS=[
+  {user:"Reyyan",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"thats actually trash",time:"16h",emoji:"💕"},
+  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"lmfao, you're asking",time:"16h",emoji:"❓"},
+  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"I will do it to every brand 😭",time:"16h",emoji:"❓"},
+  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"give it some time 🤗",time:"16h",emoji:"❓"},
+  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"just like in pixel",time:"16h",emoji:"❓"},
+  {user:"idk, they made kettu crash",text:"replied to you in <b>Kettu/rain - rainlings:</b>",quote:"cameras are INDENTICAL",time:"16h",emoji:"❓"},
+];
+
+function switchTab(tab){
+  activeTab=tab;
+  render();
+}
+
+function toggleMode(){
+  mode=mode==="preview"?"edit":"preview";
+  document.getElementById('modeBtn').textContent=mode==="preview"?"Edit Colors":"Preview";
+  render();
+}
+
+function render(){
+  const area=document.getElementById('mainArea');
+  if(mode==="preview"){
+    area.innerHTML=renderPreview();
+  }else{
+    area.innerHTML=renderControls();
+    bindControls();
+  }
+  applyColors();
+}
+
+function renderBottomNav(){
+  return `
+  <div class="bottomNav">
+    <div class="navItem ${activeTab==='home'?'active':''}" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M4 4h7V2H2v9h2V4zm0 16h7v2H2v-9h2v7zm16 0h-7v2h9v-9h-2v7zM20 4h-7V2h9v9h-2V4zM8.5 9A1.5 1.5 0 0110 7.5h4A1.5 1.5 0 0115.5 9v1h.5a1 1 0 011 1v4a1 1 0 01-1 1H8a1 1 0 01-1-1v-4a1 1 0 011-1h.5V9z"/></svg>
+      Home
+    </div>
+    <div class="navItem ${activeTab==='notif'?'active':''}" onclick="switchTab('notif')">
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      Notifications
+    </div>
+    <div class="navItem ${activeTab==='you'?'active':''}" onclick="switchTab('you')">
+      <div class="youAva"><div class="onlineDot"></div></div>
+      You
+    </div>
+  </div>`;
+}
+
+function renderPreview(){
+  let tabContent='';
+  if(activeTab==='home'){
+    tabContent=renderHome();
+  }else if(activeTab==='notif'){
+    tabContent=renderNotifications();
+  }else{
+    tabContent=renderProfile();
+  }
+  return tabContent + (activeTab==='home'?`<div class="fab"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12zM7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg></div>`:'') + renderBottomNav();
+}
+
+function renderHome(){
+  return `
+  <div class="phoneWrap">
+    <div class="rail">
+      ${SERVERS.map((s,i)=>{
         if(s.label) return '<div class="railLabel">'+s.label+'</div>';
         return '<div class="srv '+(i===0?'active dm':'')+'" style="background:'+s.bg+'">'+s.letter+'</div>'+(i===0?'<div class="railSep"></div>':'');
       }).join('')}
