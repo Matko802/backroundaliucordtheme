@@ -54,6 +54,75 @@
     "HOME_BACKGROUND": [
       "#0f0f10"
     ],
+    "BG_SURFACE_OVERLAY": [
+      "#18181b"
+    ],
+    "BG_SURFACE_OVERLAY_TMP": [
+      "#18181b"
+    ],
+    "BG_SURFACE_RAISED": [
+      "#121214"
+    ],
+    "BG_MOD_SUBTLE": [
+      "#e9d9ff0a"
+    ],
+    "MODAL_BACKGROUND": [
+      "#18181b"
+    ],
+    "MODAL_FOOTER_BACKGROUND": [
+      "#121214"
+    ],
+    "NAV_BAR_BACKGROUND": [
+      "#121214"
+    ],
+    "STATUS_BAR_BACKGROUND": [
+      "#0c0c0e"
+    ],
+    "ACTIVITY_CARD_BACKGROUND": [
+      "#0e0e10"
+    ],
+    "PROFILE_BODY_BACKGROUND_HOVER": [
+      "#121214"
+    ],
+    "PROFILE_BODY_BACKGROUND": [
+      "#0f0f10"
+    ],
+    "INPUT_BACKGROUND": [
+      "#121214"
+    ],
+    "GUILD_HEADER_TEXT_SHADOW": [
+      "#0c0c0e88"
+    ],
+    "THREAD_CHANNEL_SPINE": [
+      "#72767d44"
+    ],
+    "DEPRECATED_CARD_BG": [
+      "#0e0e10"
+    ],
+    "DEPRECATED_CARD_EDITABLE_BG": [
+      "#0f0f12"
+    ],
+    "DEPRECATED_STORE_BG": [
+      "#0f0f10"
+    ],
+    "DEPRECATED_QUICKSWITCHER_INPUT_BACKGROUND": [
+      "#121214"
+    ],
+    "DEPRECATED_QUICKSWITCHER_INPUT_PLACEHOLDER": [
+      "#72767d"
+    ],
+    "DEPRECATED_TEXT_INPUT_BG": [
+      "#121214"
+    ],
+    "DEPRECATED_TEXT_INPUT_BORDER": [
+      "#1a1a1e"
+    ],
+    "DEPRECATED_TEXT_INPUT_BORDER_HOVER": [
+      "#18181b"
+    ],
+    "DEPRECATED_TEXT_INPUT_PREFIX": [
+      "#72767d"
+    ],
     "CARD_PRIMARY_BG": [
       "#0e0e10"
     ],
@@ -235,15 +304,31 @@
   "rawColors": {
     "BLUE_500": "#8200c8",
     "BRAND_500": "#8200c8",
+    "BRAND_560": "#3d007a",
+    "BRAND_600": "#3d007a",
     "RED_500": "#ed4245",
     "BLACK_500": "#0c0c0e",
     "PRIMARY_100": "#e9d9ff",
-    "PRIMARY_560": "#0f0f10",
+    "PRIMARY_130": "#e9d9ff",
+    "PRIMARY_200": "#d79dff",
+    "PRIMARY_300": "#cbadff",
+    "PRIMARY_330": "#cbadff",
+    "PRIMARY_360": "#72767d",
+    "PRIMARY_400": "#72767d",
+    "PRIMARY_460": "#72767d",
+    "PRIMARY_500": "#1a1a1e",
+    "PRIMARY_530": "#1a1a1e",
+    "PRIMARY_560": "#121214",
     "PRIMARY_600": "#0f0f10",
     "PRIMARY_630": "#0f0f10",
-    "PRIMARY_660": "#0f0f10",
-    "PRIMARY_700": "#0f0f10",
+    "PRIMARY_660": "#121214",
+    "PRIMARY_700": "#0c0c0e",
+    "PRIMARY_730": "#0c0c0e",
+    "PRIMARY_760": "#0c0c0e",
     "PRIMARY_800": "#0c0c0e",
+    "PRIMARY_830": "#0c0c0e",
+    "PRIMARY_860": "#0c0c0e",
+    "PRIMARY_900": "#0c0c0e",
     "WHITE_500": "#ffffff"
   },
   "plus": {
